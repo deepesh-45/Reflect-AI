@@ -233,13 +233,228 @@ function mockMemoryExtraction(text) {
 }
 
 function mockPoemGeneration(text, style) {
-  return `[Mock ${style} Poetry]
-A shadow walks the empty lane,
-Gently carrying the day's heavy strain,
-Yet in this silence, small and deep,
-A quiet promise we still keep.
-To rise, to breathe, to learn to see,
-The peaceful strength we hold in fee.`;
+  const content = text.toLowerCase();
+  
+  // 1. Identify themes based on keywords
+  let theme = 'general';
+  if (content.includes('stress') || content.includes('exam') || content.includes('study') || content.includes('overwhelmed') || content.includes('pressure')) {
+    theme = 'stress';
+  } else if (content.includes('sad') || content.includes('hurt') || content.includes('cry') || content.includes('bad') || content.includes('broken')) {
+    theme = 'sad';
+  } else if (content.includes('lonely') || content.includes('alone') || content.includes('miss') || content.includes('empty')) {
+    theme = 'lonely';
+  } else if (content.includes('happy') || content.includes('good') || content.includes('great') || content.includes('glad') || content.includes('grateful')) {
+    theme = 'happy';
+  }
+
+  // 2. Select vocabulary and core ideas from input text
+  const words = text.split(/\s+/)
+    .map(w => w.replace(/[^a-zA-Z]/g, '').toLowerCase())
+    .filter(w => w.length > 4 && !['about', 'would', 'could', 'should', 'their', 'there', 'think', 'today', 'really', 'feeling'].includes(w));
+  
+  const keyword1 = words[0] || 'silence';
+  const keyword2 = words[1] || 'thoughts';
+  const keyword3 = words[2] || 'journey';
+
+  // 3. Define stanzas for themes and styles
+  let poem = '';
+
+  if (style === 'Free Verse') {
+    if (theme === 'stress') {
+      poem = `The clock ticks, a heavy weight,
+surrounded by the whispers of "${keyword1}".
+I carry the books, the expectations, the noise,
+but here, in this quiet moment,
+I breathe.
+I let go of the pressure,
+recognizing that my worth is not defined by "${keyword2}".
+Tomorrow is a new day,
+and I am enough.`;
+    } else if (theme === 'sad') {
+      poem = `A quiet shadow falls across the room,
+holding the echo of "${keyword1}".
+It is okay to sit in the dark for a while,
+to feel the weight of "${keyword2}".
+Tears are just thoughts we cannot speak.
+I listen to the rain outside,
+knowing that even the greyest sky
+eventually clears for "${keyword3}".`;
+    } else if (theme === 'lonely') {
+      poem = `An empty space beside me,
+a quiet echo of "${keyword1}".
+I look at the stars, wondering
+if someone else is looking too.
+This feeling of "${keyword2}" is a heavy coat,
+but underneath, my heart is warm.
+I am on a bridge to somewhere new,
+walking gently, step by step.`;
+    } else if (theme === 'happy') {
+      poem = `A sudden burst of light,
+carrying the warmth of "${keyword1}".
+I want to hold this feeling in my hands,
+a bright bead of "${keyword2}" and hope.
+The world is open, wide and green,
+and in this brief, beautiful hour,
+I am simply glad to be on this "${keyword3}".`;
+    } else {
+      poem = `Thoughts drift like autumn leaves,
+spinning in the gentle air.
+I catch the word "${keyword1}" as it falls.
+We walk through seasons of change,
+seeking a quiet place to rest,
+listening to the stories of "${keyword2}"
+and finding our way home.`;
+    }
+  }
+
+  else if (style === 'Reflective') {
+    if (theme === 'stress') {
+      poem = `The storm of study and the crowded mind,
+Leave simple peace and quiet far behind.
+Yet in this pause, I seek a softer space,
+To look at "${keyword1}" and find my place.
+The race will run, the grades will fade away,
+But who I am remains beyond today.
+So let the worries of "${keyword2}" take flight,
+And rest under the comfort of the night.`;
+    } else if (theme === 'sad') {
+      poem = `A gentle rain falls soft upon the stone,
+A quiet reminder we are not alone.
+Though "${keyword1}" has made the spirit weak,
+There is a strength in words we cannot speak.
+I look within, to find the hidden spark,
+That guides me gently through the deepest dark.
+With "${keyword2}" I slowly learn to grow,
+And let the heavy, troubled waters flow.`;
+    } else if (theme === 'lonely') {
+      poem = `The evening falls, the shadows grow so long,
+I search the silence for a familiar song.
+Though "${keyword1}" whispers in the empty air,
+I find a quiet courage hidden there.
+For in this solitude, I learn to see,
+The peaceful home that lives inside of me.
+No longer running from the weight of "${keyword2}",
+I walk this path, and start my life anew.`;
+    } else if (theme === 'happy') {
+      poem = `A golden light breaks through the morning pane,
+A sweet release from sorrow and the rain.
+With "${keyword1}" my heavy heart takes flight,
+And steps into the warm and healing light.
+The simple joy of being here today,
+Has washed the troubles of "${keyword2}" away.
+A quiet gratitude, so deep and true,
+Begins to build the path I travel to.`;
+    } else {
+      poem = `I watch the river roll towards the sea,
+And wonder what the future holds for me.
+The words of "${keyword1}" are written on the page,
+A gentle guide for every passing stage.
+We look behind, to see how far we've grown,
+And face the wide, beautiful unknown.
+With every "${keyword2}" we learn to find,
+A peaceful shelter in a quiet mind.`;
+    }
+  }
+
+  else if (style === 'Motivational') {
+    if (theme === 'stress') {
+      poem = `Stand tall, though mountain peaks of "${keyword1}" arise,
+Look upward, keep your focus on the skies.
+The pressure of "${keyword2}" is only here to mould,
+A spirit stronger, courageous, and bold.
+You are the author of the story you write,
+Step through the darkness and into the light.
+Take a deep breath, believe in the grind,
+Leave every heavy, doubting thought behind!`;
+    } else if (theme === 'sad') {
+      poem = `Though tears may fall and blur the road ahead,
+Remember all the gentle words you said.
+The pain of "${keyword1}" is not the final page,
+But just a temporary stage.
+Rise up, rebuild, and let your courage grow,
+You have a fire that the world will know.
+Out of the ashes of "${keyword2}" you will rise,
+With hope and passion shining in your eyes!`;
+    } else if (theme === 'lonely') {
+      poem = `Though walking all alone in "${keyword1}"'s cold air,
+Remember there is strength inside you there.
+You do not need a crowd to make you whole,
+You hold a brilliant light inside your soul.
+Keep stepping forward, let your footsteps trace,
+A path of hope, of confidence, and grace.
+The world is waiting for the truth of you,
+Stand strong, stand proud, and start your day anew!`;
+    } else if (theme === 'happy') {
+      poem = `Run forward with the wind upon your face,
+And bring your joy to every empty place!
+With "${keyword1}" let your spirit sing,
+Celebrate the beauty that the mornings bring.
+The fire of "${keyword2}" will light the way,
+To make the most of this amazing day.
+Keep building dreams, keep reaching for the sky,
+Spread out your wings, it is your time to fly!`;
+    } else {
+      poem = `Every small step upon this winding road,
+Brings you much closer to your true abode.
+Though "${keyword1}" may test your patience now,
+You will get through this, keep your solemn vow.
+Believe in "${keyword2}" and let your vision guide,
+With hope and resolution side by side.
+The future waits, so open up the door,
+And be the strength you've always waited for!`;
+    }
+  }
+
+  else if (style === 'Emotional') {
+    if (theme === 'stress') {
+      poem = `It is so heavy, this endless, noisy race,
+I feel the tears behind my smiling face.
+The fear of "${keyword1}" is wrapping tight,
+And keeping me awake into the night.
+But in this silent page, I lay it down,
+The heavy books, the pressure, and the crown.
+I tell myself, in whispers soft and deep,
+It is okay to rest, to breathe, to sleep.`;
+    } else if (theme === 'sad') {
+      poem = `A broken melody, a soft and aching sigh,
+I ask the quiet walls the reason why.
+The shadow of "${keyword1}" is sitting near,
+Holding the heavy weight of every tear.
+I feel the sorrow deep within my chest,
+A tired heart that only wants to rest.
+But even in this cold and dark embrace,
+I find a gentle, healing saving grace.`;
+    } else if (theme === 'lonely') {
+      poem = `The silence of the room is like a wall,
+I listen for a voice that doesn't call.
+The ache of "${keyword1}" is hard to bear,
+I wrap my arms around the empty air.
+But in this quiet space, I feel a spark,
+A soft, enduring light within the dark.
+I am my own companion on this road,
+Gently carrying the heavy load.`;
+    } else if (theme === 'happy') {
+      poem = `My heart overflows with a sweet, gentle light,
+Like stars that softly illuminate the night.
+With "${keyword1}" I feel the weight depart,
+A warm, healing current filling up my heart.
+The simple beauty of this quiet peace,
+Has brought my troubled soul a sweet release.
+I hold this precious moment close to me,
+Grateful for the joy that sets me free.`;
+    } else {
+      poem = `I feel the depth of all these shifting tides,
+The quiet spaces where the spirit hides.
+The memory of "${keyword1}" is soft and clear,
+A gentle presence that is always near.
+We feel so deeply, carry so much weight,
+As we walk forward through the open gate.
+With "${keyword2}" we learn to understand,
+And hold our hearts within a gentle hand.`;
+    }
+  }
+
+  return poem;
 }
 
 function mockWritingEnhancement(text, action) {

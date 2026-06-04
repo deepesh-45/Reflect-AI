@@ -19,12 +19,24 @@ export default function PoetryPage() {
   const [poemError, setPoemError] = useState('');
   const [savedPoems, setSavedPoems] = useState([]);
   const [loadingLibrary, setLoadingLibrary] = useState(false);
+  const [journals, setJournals] = useState([]);
+  const [selectedJournalId, setSelectedJournalId] = useState('');
 
   useEffect(() => {
     if (activeTab === 'poetry') {
       fetchPoemLibrary();
+      fetchJournals();
     }
   }, [activeTab]);
+
+  const fetchJournals = async () => {
+    try {
+      const res = await api.get('/api/journal');
+      setJournals(res.data);
+    } catch (err) {
+      console.error('Error fetching journals:', err);
+    }
+  };
 
   const fetchPoemLibrary = async () => {
     try {
@@ -69,12 +81,14 @@ export default function PoetryPage() {
       setGeneratedPoem('');
       const res = await api.post('/api/assistant/poetry', {
         text: poetryInput,
+        journalId: selectedJournalId || null,
         style: poetryStyle
       });
       setGeneratedPoem(res.data.poem.generatedPoem);
       // Prepend to library
       setSavedPoems([res.data.poem, ...savedPoems]);
       setPoetryInput('');
+      setSelectedJournalId('');
     } catch (err) {
       console.error('Poem generation error:', err);
       setPoemError('Failed to transform your reflection into poetry.');
@@ -221,6 +235,33 @@ export default function PoetryPage() {
                     <option value="Reflective">Reflective</option>
                     <option value="Motivational">Motivational</option>
                     <option value="Emotional">Emotional</option>
+                  </select>
+                </div>
+
+                <div className="form-group" style={{ margin: 0 }}>
+                  <label className="form-label">Transform a Saved Journal (Optional)</label>
+                  <select 
+                    className="input" 
+                    value={selectedJournalId}
+                    onChange={(e) => {
+                      const jId = e.target.value;
+                      setSelectedJournalId(jId);
+                      if (jId) {
+                        const selectedJ = journals.find(j => j.id === jId);
+                        if (selectedJ) {
+                          setPoetryInput(selectedJ.content);
+                        }
+                      } else {
+                        setPoetryInput('');
+                      }
+                    }}
+                  >
+                    <option value="">-- Choose from your journals --</option>
+                    {journals.map(j => (
+                      <option key={j.id} value={j.id}>
+                        {j.title} ({new Date(j.createdAt).toLocaleDateString()})
+                      </option>
+                    ))}
                   </select>
                 </div>
               </div>
