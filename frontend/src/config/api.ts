@@ -9,8 +9,12 @@ const api = axios.create({
 api.interceptors.request.use(async (config) => {
   const user = auth.currentUser;
   if (user) {
-    const token = await user.getIdToken();
-    config.headers.Authorization = `Bearer ${token}`;
+    try {
+      const token = await user.getIdToken();
+      config.headers.Authorization = `Bearer ${token}`;
+    } catch (e) {
+      console.error('Error getting user ID token:', e);
+    }
   }
   return config;
 });
